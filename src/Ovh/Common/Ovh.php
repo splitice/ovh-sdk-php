@@ -30,6 +30,7 @@ use Ovh\Sms\Sms;
 use Ovh\Vps\Vps;
 use Ovh\Xdsl\Xdsl;
 use Ovh\Cloud\Cloud;
+use Ovh\Ip\Firewall;
 
 
 class Ovh
@@ -100,6 +101,10 @@ class Ovh
 	 */
 	public function getDedicatedServer($domain){
 		return new Server($domain);
+	}
+	
+	public function getIpFirewall($ip){
+		return new Firewall($ip);
 	}
 
 
