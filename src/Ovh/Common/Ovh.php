@@ -31,6 +31,7 @@ use Ovh\Vps\Vps;
 use Ovh\Xdsl\Xdsl;
 use Ovh\Cloud\Cloud;
 use Ovh\Ip\Firewall;
+use Ovh\Ip\ReverseDns;
 
 
 class Ovh
@@ -107,6 +108,9 @@ class Ovh
 		return new Firewall($ip);
 	}
 
+	public function getIpReverse($ip){
+		return new ReverseDns($ip);
+	}
 
 
     /**

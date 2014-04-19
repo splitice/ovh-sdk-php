@@ -1,7 +1,7 @@
 <?php
 namespace Ovh\Ip;
 
-class Firewall {
+class ReverseDns {
 	private $ip;
 	private static $ipClient;
 	/**
@@ -25,19 +25,12 @@ class Firewall {
 		return $this->ip;
 	}
 	
-	
-	
-	public function setFirewallOn($ipblock){
-		self::getClient()->setFirewallOn($this->getIp(),$ipblock);
+	public function setReverse($ipReverse, $reverse){
+		self::getClient()->setReverse($ipReverse, $this->getIp(), $reverse);
 		return true;
 	}
 	
-	public function setFirewallOff($ipblock){
-		self::getClient()->setFirewallOff($this->getIp(),$ipblock);
-		return true;
-	}
-	
-	public function getFirewall($ipblock){
-		return self::getClient()->getFirewall($this->getIp(), $ipblock);
+	public function getReverse($ipReverse){
+		return self::getClient()->getReverse($ipReverse, $this->getIp());
 	}
 }

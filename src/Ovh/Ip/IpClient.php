@@ -22,7 +22,6 @@
 namespace Ovh\Ip;
 
 #use Guzzle\Http\Exception\ClientErrorResponseException;
-
 #use Guzzle\Http\Exception\BadResponseException;
 #use Guzzle\Http\Exception\CurlException;
 use Guzzle\Http\Message\Response;
@@ -38,6 +37,48 @@ use Ovh\Dedicated\Server\Exception\ServerException;
 
 class IpClient extends AbstractClient
 {
+	public function getReverse($ip,$ipReverse)
+	{
+		if (!$ip)
+			throw new BadMethodCallException('Parameter $ip is missing.');
+		$ip = (string)$ip;
+		
+		if (!$ipReverse)
+			throw new BadMethodCallException('Parameter $ipReverse is missing.');
+		$ipReverse = (string)$ipReverse;
+	
+		$payload = array();
+		try {
+			$r = $this->get('ip/' . urlencode($ip).'/reverse/'.$ipReverse, array('Content-Type' => 'application/json;charset=UTF-8'))->send();
+		} catch (\Exception $e) {
+			throw new ServerException($e->getMessage(), $e->getCode(), $e);
+		}
+		return json_decode($r->getBody(true));
+	}
+	
+	public function setReverse($ip,$ipReverse,$reverse)
+	{
+		if (!$ip)
+			throw new BadMethodCallException('Parameter $ip is missing.');
+		$ip = (string)$ip;
+		
+		if (!$ipReverse)
+			throw new BadMethodCallException('Parameter $ipReverse is missing.');
+		$ipReverse = (string)$ipReverse;
+		
+		if (!$reverse)
+			throw new BadMethodCallException('Parameter $reverse is missing.');
+		$reverse = (string)$reverse;
+	
+		$payload = array('ipReverse'=>$ipReverse, 'reverse'=>$reverse);
+		try {
+			$r = $this->post('ip/' . urlencode($ip).'/reverse', array('Content-Type' => 'application/json;charset=UTF-8'), json_encode($payload))->send();
+		} catch (\Exception $e) {
+			throw new ServerException($e->getMessage(), $e->getCode(), $e);
+		}
+		return $r->getBody(true);
+	}
+	
 	public function setFirewallOn($ip,$ipOnFirewall)
 	{
 		if (!$ip)
