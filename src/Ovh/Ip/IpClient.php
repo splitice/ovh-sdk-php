@@ -76,7 +76,7 @@ class IpClient extends AbstractClient
 		} catch (\Exception $e) {
 			throw new ServerException($e->getMessage(), $e->getCode(), $e);
 		}
-		return $r->getBody(true);
+		return json_decode($r->getBody(true));
 	}
 	
 	public function setFirewallOn($ip,$ipOnFirewall)
@@ -95,7 +95,7 @@ class IpClient extends AbstractClient
 		} catch (\Exception $e) {
 			throw new ServerException($e->getMessage(), $e->getCode(), $e);
 		}
-		return $r->getBody(true);
+		return json_decode($r->getBody(true));
 	}
 	
 	public function setFirewallOff($ip,$ipOnFirewall)
@@ -114,7 +114,7 @@ class IpClient extends AbstractClient
 		} catch (\Exception $e) {
 			throw new ServerException($e->getMessage(), $e->getCode(), $e);
 		}
-		return $r->getBody(true);
+		return json_decode($r->getBody(true));
 	}
 	
 	public function setMitigation($ip,$ipOnMitigation)
@@ -133,7 +133,7 @@ class IpClient extends AbstractClient
 		} catch (\Exception $e) {
 			throw new ServerException($e->getMessage(), $e->getCode(), $e);
 		}
-		return $r->getBody(true);
+		return json_decode($r->getBody(true));
 	}
 	
 	public function setMitigationOff($ip,$ipOnMitigation)
@@ -152,7 +152,7 @@ class IpClient extends AbstractClient
 		} catch (\Exception $e) {
 			throw new ServerException($e->getMessage(), $e->getCode(), $e);
 		}
-		return $r->getBody(true);
+		return json_decode($r->getBody(true));
 	}
 	
 	public function getMitigation($ip,$ipOnMitigation)
@@ -167,11 +167,11 @@ class IpClient extends AbstractClient
 	
 		$payload = array('ipOnMitigation'=>$ipOnMitigation);
 		try {
-			$r = $this->get('ip/' . $ip . '/mitigation', array('Content-Type' => 'application/json;charset=UTF-8'), json_encode($payload))->send();
+			$r = $this->get('ip/' . urlencode($ip) . '/mitigation', array('Content-Type' => 'application/json;charset=UTF-8'), json_encode($payload))->send();
 		} catch (\Exception $e) {
 			throw new ServerException($e->getMessage(), $e->getCode(), $e);
 		}
-		return $r->getBody(true);
+		return json_decode($r->getBody(true));
 	}
 	
 	public function getMitigationStats($ip, $ipOnMitigation, $from, $scale ,$to)
@@ -186,11 +186,11 @@ class IpClient extends AbstractClient
 	
 		$payload = array('ipOnMitigation'=>$ipOnMitigation,'from'=>$from, 'scale'=>$scale, 'to'=>$to);
 		try {
-			$r = $this->get('ip/' . $ip . '/mitigation/stats', array('Content-Type' => 'application/json;charset=UTF-8'), json_encode($payload))->send();
+			$r = $this->get('ip/' . urlencode($ip) . '/mitigation/stats', array('Content-Type' => 'application/json;charset=UTF-8'), json_encode($payload))->send();
 		} catch (\Exception $e) {
 			throw new ServerException($e->getMessage(), $e->getCode(), $e);
 		}
-		return $r->getBody(true);
+		return json_decode($r->getBody(true));
 	}
 	
     public function getFirewall($ip,$ipOnFirewall)
@@ -205,11 +205,11 @@ class IpClient extends AbstractClient
         
         $payload = array('ipOnFirewall'=>$ipOnFirewall);
         try {
-            $r = $this->get('ip/' . $ip . '/firewall', array('Content-Type' => 'application/json;charset=UTF-8'), json_encode($payload))->send();
+            $r = $this->get('ip/' . urlencode($ip) . '/firewall', array('Content-Type' => 'application/json;charset=UTF-8'), json_encode($payload))->send();
         } catch (\Exception $e) {
             throw new ServerException($e->getMessage(), $e->getCode(), $e);
         }
-        return $r->getBody(true);
+		return json_decode($r->getBody(true));
     }
     
     public function getFirewallRules($ip,$ipOnFirewall)
@@ -223,11 +223,11 @@ class IpClient extends AbstractClient
     	$ipOnFirewall = (string)$ipOnFirewall;
     
     	try {
-    		$r = $this->get('ip/' . $ip . '/firewall/'.$ipOnFirewall.'/rules')->send();
+    		$r = $this->get('ip/' . urlencode($ip) . '/firewall/'.$ipOnFirewall.'/rule')->send();
     	} catch (\Exception $e) {
     		throw new ServerException($e->getMessage(), $e->getCode(), $e);
     	}
-    	return $r->getBody(true);
+		return json_decode($r->getBody(true));
     }
     
     public function getFirewallRule($ip,$ipOnFirewall,$seq)
@@ -241,11 +241,11 @@ class IpClient extends AbstractClient
     	$ipOnFirewall = (string)$ipOnFirewall;
     
     	try {
-    		$r = $this->get('ip/' . $ip . '/firewall/'.$ipOnFirewall.'/rules/'.$seq)->send();
+    		$r = $this->get('ip/' . urlencode($ip) . '/firewall/'.$ipOnFirewall.'/rule/'.$seq)->send();
     	} catch (\Exception $e) {
     		throw new ServerException($e->getMessage(), $e->getCode(), $e);
     	}
-    	return $r->getBody(true);
+		return json_decode($r->getBody(true));
     }
     
     public function setFirewallRuleDelete($ip,$ipOnFirewall,$seq)
@@ -259,32 +259,33 @@ class IpClient extends AbstractClient
     	$ipOnFirewall = (string)$ipOnFirewall;
     
     	try {
-    		$r = $this->delete('ip/' . $ip . '/firewall/'.$ipOnFirewall.'/rules/'.$seq)->send();
+    		$r = $this->delete('ip/' . urlencode($ip) . '/firewall/'.$ipOnFirewall.'/rule/'.$seq)->send();
     	} catch (\Exception $e) {
     		throw new ServerException($e->getMessage(), $e->getCode(), $e);
     	}
-    	return $r->getBody(true);
+		return json_decode($r->getBody(true));
     }
     
     
-    public function setFirewallRule($ip,$ipOnMitigation,$action,Range $destinationPort,
-    		$protocol,$sequence,$source,Range $sourcePort,TcpOption $tcpOption,UdpOption $udpOption)
+    public function setFirewallRule($ip,$ipOnFirewall,$action,$destinationPort,
+    		$protocol,$sequence,$source,$sourcePort,$fragments,$tcpOption)
     {
     	if (!$ip)
     		throw new BadMethodCallException('Parameter $ip is missing.');
     	$ip = (string)$ip;
     
-    	if (!$ipOnMitigation)
+    	if (!$ipOnFirewall)
     		throw new BadMethodCallException('Parameter $ipOnFirewall is missing.');
-    	$ipOnMitigation = (string)$ipOnMitigation;
+		$ipOnFirewall = (string)$ipOnFirewall;
     
-    	$payload = array('ipOnMitigation'=>$ipOnMitigation,'action' =>$action, 'destinationPort'=>$destinationPort,
-    					'protocol'=>$protocol,'sequence'=>$sequence,'sourcePort'=>$sourcePort, 'tcpOption'=>$tcpOption, 'udpOption'=>$udpOption);
+    	$payload = array('action' =>$action, 'destinationPort'=>$destinationPort, 'source'=>$source,
+    					'protocol'=>$protocol,'sequence'=>$sequence,'sourcePort'=>$sourcePort, 'tcpOption'=>array('fragments'=>$fragments, 'option'=>$tcpOption));
+		//die(var_dump($payload));
     	try {
-    		$r = $this->post('ip/' . $ip.'/mitigation', array('Content-Type' => 'application/json;charset=UTF-8'), json_encode($payload))->send();
+    		$r = $this->post('ip/' . urlencode($ip) . '/firewall/'.$ipOnFirewall.'/rule', array('Content-Type' => 'application/json;charset=UTF-8'), json_encode($payload))->send();
     	} catch (\Exception $e) {
     		throw new ServerException($e->getMessage(), $e->getCode(), $e);
     	}
-    	return $r->getBody(true);
+		return json_decode($r->getBody(true));
     }
 }
