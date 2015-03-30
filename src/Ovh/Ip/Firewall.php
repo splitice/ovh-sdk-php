@@ -1,6 +1,8 @@
 <?php
 namespace Ovh\Ip;
 
+use Guzzle\Http\Exception\ClientErrorResponseException;
+
 class Firewall {
 	private $ip;
 	private static $ipClient;
@@ -43,9 +45,14 @@ class Firewall {
 
 	public function addFirewallRule($ipOnMitigation,$action,$destinationPort,
 									$protocol,$sequence,$source,$sourcePort,$fragments,$tcpOption){
-		return
-			self::getClient()->setFirewallRule($this->ip,$ipOnMitigation,$action,$destinationPort,
-				$protocol,$sequence,$source,$sourcePort,$fragments,$tcpOption);
+		try {
+			return
+				self::getClient()->setFirewallRule($this->ip, $ipOnMitigation, $action, $destinationPort,
+					$protocol, $sequence, $source, $sourcePort, $fragments, $tcpOption);
+		}catch(ClientErrorResponseException $ex){
+			die(var_dump($this->ip, $ipOnMitigation, $action, $destinationPort,
+				$protocol, $sequence, $source, $sourcePort, $fragments, $tcpOption));
+		}
 	}
 
 	public function deleteFirewallRule($ipOnMitigation,$sequence){

@@ -279,7 +279,11 @@ class IpClient extends AbstractClient
 		$ipOnFirewall = (string)$ipOnFirewall;
     
     	$payload = array('action' =>$action, 'destinationPort'=>$destinationPort, 'source'=>$source,
-    					'protocol'=>$protocol,'sequence'=>$sequence,'sourcePort'=>$sourcePort, 'tcpOption'=>array('fragments'=>$fragments, 'option'=>$tcpOption));
+    					'protocol'=>$protocol,'sequence'=>$sequence,'sourcePort'=>$sourcePort);
+
+		if($protocol == 'tcp'){
+			$payload['tcpOption']=array('fragments'=>$fragments, 'option'=>$tcpOption);
+		}
 		//die(var_dump($payload));
     	try {
     		$r = $this->post('ip/' . urlencode($ip) . '/firewall/'.$ipOnFirewall.'/rule', array('Content-Type' => 'application/json;charset=UTF-8'), json_encode($payload))->send();
