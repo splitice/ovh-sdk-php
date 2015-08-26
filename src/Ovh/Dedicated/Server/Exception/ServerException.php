@@ -44,7 +44,7 @@ class ServerException extends \RuntimeException
 		$response = $prev->getResponse();
 		#var_dump($response->getBody());
 
-		$statusCode = $response->getStatusCode();
+		$statusCode = $response?$response->getStatusCode():null;
 		switch ($statusCode) {
 			case 404 :
 				// Bad Method or Ressource not available
