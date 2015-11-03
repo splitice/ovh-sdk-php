@@ -41,7 +41,7 @@ class ServerException extends \RuntimeException
 		$request = $prev->getRequest();
 		#print $request->getResource();
 		#die();
-		$response = $prev->getResponse();
+		$response = method_exists($prev,'getResponse')?$prev->getResponse():null;
 		#var_dump($response->getBody());
 
 		$statusCode = $response?$response->getStatusCode():null;

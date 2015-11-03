@@ -45,7 +45,7 @@ class AbstractClient extends Client
      * @param null $body
      * @return \Guzzle\Http\Message\Request
      */
-    public function createRequest($method = RequestInterface::GET, $uri = null, $headers = null, $body = null)
+    public function createRequest($method = 'GET', $uri = null, $headers = null, $body = null, array $options = array())
     {
 
         $request = parent::createRequest($method, $uri, $headers, $body);

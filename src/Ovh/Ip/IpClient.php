@@ -88,10 +88,9 @@ class IpClient extends AbstractClient
 		if (!$ipOnFirewall)
 			throw new BadMethodCallException('Parameter $ipOnFirewall is missing.');
 		$ipOnFirewall = (string)$ipOnFirewall;
-		
-		$payload = array('ipOnFirewall'=>$ipOnFirewall);
+
 		try {
-			$r = $this->put('ip/' . $ip.'/firewall', array('Content-Type' => 'application/json;charset=UTF-8'), json_encode($payload))->send();
+			$r = $this->put('ip/' . urlencode($ip).'/firewall/'.$ipOnFirewall, array('Content-Type' => 'application/json;charset=UTF-8'))->send();
 		} catch (\Exception $e) {
 			throw new ServerException($e->getMessage(), $e->getCode(), $e);
 		}
@@ -107,17 +106,16 @@ class IpClient extends AbstractClient
 		if (!$ipOnFirewall)
 			throw new BadMethodCallException('Parameter $ipOnFirewall is missing.');
 		$ipOnFirewall = (string)$ipOnFirewall;
-	
-		$payload = array('ipOnFirewall'=>$ipOnFirewall);
+
 		try {
-			$r = $this->delete('ip/' . $ip.'/firewall', array('Content-Type' => 'application/json;charset=UTF-8'), json_encode($payload))->send();
+			$r = $this->delete('ip/' . urlencode($ip).'/firewall/'.$ipOnFirewall, array('Content-Type' => 'application/json;charset=UTF-8'))->send();
 		} catch (\Exception $e) {
 			throw new ServerException($e->getMessage(), $e->getCode(), $e);
 		}
 		return json_decode($r->getBody(true));
 	}
 	
-	public function setMitigation($ip,$ipOnMitigation)
+	public function setMitigationOn($ip,$ipOnMitigation)
 	{
 		if (!$ip)
 			throw new BadMethodCallException('Parameter $ip is missing.');
@@ -126,10 +124,9 @@ class IpClient extends AbstractClient
 		if (!$ipOnMitigation)
 			throw new BadMethodCallException('Parameter $ipOnFirewall is missing.');
 		$ipOnFirewall = (string)$ipOnMitigation;
-	
-		$payload = array('ipOnMitigation'=>$ipOnMitigation);
+
 		try {
-			$r = $this->post('ip/' . $ip.'/mitigation', array('Content-Type' => 'application/json;charset=UTF-8'), json_encode($payload))->send();
+			$r = $this->put('ip/' . urlencode($ip).'/mitigation/'.$ipOnMitigation, array('Content-Type' => 'application/json;charset=UTF-8'))->send();
 		} catch (\Exception $e) {
 			throw new ServerException($e->getMessage(), $e->getCode(), $e);
 		}
@@ -145,10 +142,9 @@ class IpClient extends AbstractClient
 		if (!$ipOnMitigation)
 			throw new BadMethodCallException('Parameter $ipOnFirewall is missing.');
 		$ipOnMitigation = (string)$ipOnMitigation;
-	
-		$payload = array('ipOnMitigation'=>$ipOnMitigation);
+
 		try {
-			$r = $this->delete('ip/' . $ip.'/mitigation', array('Content-Type' => 'application/json;charset=UTF-8'), json_encode($payload))->send();
+			$r = $this->delete('ip/' . urlencode($ip).'/mitigation/'.$ipOnMitigation, array('Content-Type' => 'application/json;charset=UTF-8'))->send();
 		} catch (\Exception $e) {
 			throw new ServerException($e->getMessage(), $e->getCode(), $e);
 		}
