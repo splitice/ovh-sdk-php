@@ -126,7 +126,7 @@ class IpClient extends AbstractClient
 		$ipOnFirewall = (string)$ipOnMitigation;
 
 		try {
-			$r = $this->put('ip/' . urlencode($ip).'/mitigation/'.$ipOnMitigation, array('Content-Type' => 'application/json;charset=UTF-8'))->send();
+			$r = $this->post('ip/' . urlencode($ip).'/mitigation', array('Content-Type' => 'application/json;charset=UTF-8'), json_encode(array('ipOnMitigation'=>$ipOnMitigation)))->send();
 		} catch (\Exception $e) {
 			throw new ServerException($e->getMessage(), $e->getCode(), $e);
 		}
